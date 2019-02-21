@@ -461,9 +461,9 @@ namespace CLGUI {
                     for (int i = 0; i < Frames.Length; i++) {
                         string TFile = InDir + GetValidName(Frames[i].Name) + ".png";
                         if (File.Exists(TFile)) {
-                            var Img = Image.FromFile(TFile);
-                            Frames[i].Content = new Bitmap(Img);
-                            Img.Dispose();
+
+                            using (var Img = new Bitmap(TFile))
+                                Frames[i].Content = Img;                            
                         }
                     }
 
@@ -523,8 +523,9 @@ namespace CLGUI {
                 for (int i = 0; i < Texs.Length; i++) {
                     string PNG = Texs.Length == 1 ? PNGA : string.Format(PNGB, i);
 
-                    var Img = Image.FromFile(PNG);
-                    Texs[i] = new Bitmap(Img);
+                    using (var Img = new Bitmap(PNG))
+                        Texs[i] = Img;
+                    
                 }
 
                 Texture = Reader.Export(Texs);
