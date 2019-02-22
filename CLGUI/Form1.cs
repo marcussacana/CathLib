@@ -460,7 +460,7 @@ namespace CLGUI {
                     SP2 Texture = new SP2(Input);
                     Frame[] Frames = Texture.Import();
                     for (int i = 0; i < Frames.Length; i++) {
-                        string TFile = InDir + $"[{i++}] " + GetValidName(Frames[i].Name) + ".png";
+                        string TFile = InDir + $"[{i}] " + GetValidName(Frames[i].Name) + ".png";
                         if (File.Exists(TFile)) 
                             Frames[i].Content = new Bitmap(TFile);                         
                         
