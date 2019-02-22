@@ -381,9 +381,10 @@ namespace CLGUI {
                     SP2 SP2 = new SP2(Stream);
                     var Textures = SP2.Import();
 
+                    int i = 0;
                     foreach (Frame Frame in Textures) {
                         string Name = GetValidName(Frame.Name);
-                        Frame.Content.Save(OutDir + Name + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        Frame.Content.Save(OutDir + $"[{i++}] " + Name + ".png", System.Drawing.Imaging.ImageFormat.Png);
                     }
                 }
             }
@@ -459,18 +460,19 @@ namespace CLGUI {
                     SP2 Texture = new SP2(Input);
                     Frame[] Frames = Texture.Import();
                     for (int i = 0; i < Frames.Length; i++) {
-                        string TFile = InDir + GetValidName(Frames[i].Name) + ".png";
-                        if (File.Exists(TFile)) {
-
-                            using (var Img = new Bitmap(TFile))
-                                Frames[i].Content = Img;                            
-                        }
+                        string TFile = InDir + $"[{i++}] " + GetValidName(Frames[i].Name) + ".png";
+                        if (File.Exists(TFile)) 
+                            Frames[i].Content = new Bitmap(TFile);                         
+                        
                     }
 
                     using (Stream Output = File.Create(Auto ? Path.GetDirectoryName(FileName) + "\\" + Path.GetFileNameWithoutExtension(FileName) + "-new" + Path.GetExtension(FileName) : sfd.FileName)) {
                         Texture.Export(Output, Frames, recompressToolStripMenuItem.Checked);
                         Output.Close();
                     }
+
+                    foreach (var Frame in Frames)
+                        Frame.Content.Dispose();
                 }
             }
 
