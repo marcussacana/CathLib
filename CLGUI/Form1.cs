@@ -58,7 +58,7 @@ namespace CLGUI {
                 listBox1.Items.AddRange(MF.Import());
                 return;
             }
-            
+
             Script = new BMDTL(Scr);
 
             listBox1.Items.Clear();
@@ -150,7 +150,7 @@ namespace CLGUI {
 
             return SB.ToString();
         }
-        
+
         //{0xD828}Vincent{0xD829}\n{0xDA8A}{0x0003}{0x0010}{0xDA61}눊{0x0001}...!? I almost fell asleep. 
         private string[] ParseStr(string Str) {
             const string SetColorTag = "{0xD901}";
@@ -267,13 +267,13 @@ namespace CLGUI {
             string[] Files = GetFiles(Directory);
 
             List<object> Strings = new List<object>();
-            for(long i = 0; i < Files.LongLength; i++) {
-                Text = $"Reading Files... {i}/{Files.LongLength} ({(int)((double)i/Files.LongLength*100)}%)";
+            for (long i = 0; i < Files.LongLength; i++) {
+                Text = $"Reading Files... {i}/{Files.LongLength} ({(int)((double)i / Files.LongLength * 100)}%)";
                 Application.DoEvents();
                 string FN = Path.GetFileName(Files[i]).ToLower();
                 if (FN.StartsWith("i_") || FN.StartsWith("g_") || FN.StartsWith("s_") || FN.StartsWith("f_"))
                     continue;
-                
+
                 Strings.Add(new object[] { FN, Process(Files[i], File.Open(Files[i], FileMode.Open)) });
             }
 
@@ -304,7 +304,7 @@ namespace CLGUI {
 
             return new string[0];
         }
-            
+
         private string[] GetFiles(string Directory, string Filter = "*.bmd;*.pac;*.bf") {
             List<string> Entries = new List<string>();
             foreach (string Ext in Filter.Split(';'))
@@ -402,7 +402,7 @@ namespace CLGUI {
 
             return Rst;
         }
-        
+
         private void createRectanglesToolStripMenuItem_Click(object sender, EventArgs e) {
 #if DEBUG
             bool Swich = false;
@@ -411,7 +411,7 @@ namespace CLGUI {
             byte[] Rand = new byte[4 * Array.Length];
             new Random().NextBytes(Rand);
             for (int i = 0; i < Array.Length; i++) {
-                int Width  = Rand[(i * 4) + 0];
+                int Width = Rand[(i * 4) + 0];
                 int Heigth = Rand[(i * 4) + 2];
                 Array[i] = new Bitmap(Width, Heigth);
 
@@ -452,7 +452,7 @@ namespace CLGUI {
                         return;
                 }
 
-                string InDir = Auto ? FileName + "~\\": fb.SelectedPath;
+                string InDir = Auto ? FileName + "~\\" : fb.SelectedPath;
                 if (!InDir.EndsWith("\\"))
                     InDir += "\\";
 
@@ -461,9 +461,9 @@ namespace CLGUI {
                     Frame[] Frames = Texture.Import();
                     for (int i = 0; i < Frames.Length; i++) {
                         string TFile = InDir + $"[{i}] " + GetValidName(Frames[i].Name) + ".png";
-                        if (File.Exists(TFile)) 
-                            Frames[i].Content = new Bitmap(TFile);                         
-                        
+                        if (File.Exists(TFile))
+                            Frames[i].Content = new Bitmap(TFile);
+
                     }
 
                     using (Stream Output = File.Create(Auto ? Path.GetDirectoryName(FileName) + "\\" + Path.GetFileNameWithoutExtension(FileName) + "-new" + Path.GetExtension(FileName) : sfd.FileName)) {
@@ -527,7 +527,7 @@ namespace CLGUI {
 
                     using (var Img = new Bitmap(PNG))
                         Texs[i] = Img;
-                    
+
                 }
 
                 Texture = Reader.Export(Texs);
@@ -549,6 +549,35 @@ namespace CLGUI {
                 listBox1.Items.Clear();
                 listBox1.Items.AddRange(Strs);
             }
+        }
+
+        private void extractPackgetToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "All Files|*.*";
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+            string Path = ofd.FileName;
+            string OutDir = Path + "~\\";
+            using (Stream Content = File.Open(Path, FileMode.Open)) {
+                if (Path.ToLower().EndsWith(".pac")) {
+                    foreach (Entry Entry in PAC.Open(Content)) {
+                        using (Stream Output = File.Create(OutDir + GetValidName(Entry.Name))) {
+                            Entry.Content.CopyTo(Output);
+                            Output.Close();
+                        }
+                    }
+                }
+                if (Path.ToLower().EndsWith(".bf")) {
+                    foreach (Entry Entry in BF.Open(Content)) {
+                        using (Stream Output = File.Create(OutDir + GetValidName(Entry.Name))) {
+                            Entry.Content.CopyTo(Output);
+                            Output.Close();
+                        }
+                    }
+                }
+                Content.Close();
+            }
+            MessageBox.Show("Extracted");
         }
     }
 }

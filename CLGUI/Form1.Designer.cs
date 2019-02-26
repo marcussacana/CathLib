@@ -33,6 +33,7 @@
             this.sP2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.recompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createRectanglesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +41,7 @@
             this.openToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.generateStringPatchxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.recompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractPackgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,9 +76,10 @@
             this.sP2ToolStripMenuItem,
             this.debugToolStripMenuItem,
             this.dDSToolStripMenuItem,
-            this.generateStringPatchxmlToolStripMenuItem});
+            this.generateStringPatchxmlToolStripMenuItem,
+            this.extractPackgetToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(185, 180);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(185, 202);
             // 
             // openToolStripMenuItem
             // 
@@ -112,7 +114,7 @@
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem1_Click);
             // 
@@ -121,9 +123,18 @@
             this.saveToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.recompressToolStripMenuItem});
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem1.Text = "Save";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // recompressToolStripMenuItem
+            // 
+            this.recompressToolStripMenuItem.Checked = true;
+            this.recompressToolStripMenuItem.CheckOnClick = true;
+            this.recompressToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.recompressToolStripMenuItem.Name = "recompressToolStripMenuItem";
+            this.recompressToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.recompressToolStripMenuItem.Text = "Recompress";
             // 
             // debugToolStripMenuItem
             // 
@@ -178,14 +189,12 @@
             this.generateStringPatchxmlToolStripMenuItem.Text = "Dump Strings";
             this.generateStringPatchxmlToolStripMenuItem.Click += new System.EventHandler(this.generateStringPatchxmlToolStripMenuItem_Click);
             // 
-            // recompressToolStripMenuItem
+            // extractPackgetToolStripMenuItem
             // 
-            this.recompressToolStripMenuItem.Checked = true;
-            this.recompressToolStripMenuItem.CheckOnClick = true;
-            this.recompressToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.recompressToolStripMenuItem.Name = "recompressToolStripMenuItem";
-            this.recompressToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.recompressToolStripMenuItem.Text = "Recompress";
+            this.extractPackgetToolStripMenuItem.Name = "extractPackgetToolStripMenuItem";
+            this.extractPackgetToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.extractPackgetToolStripMenuItem.Text = "Extract Packget";
+            this.extractPackgetToolStripMenuItem.Click += new System.EventHandler(this.extractPackgetToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -222,6 +231,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recompressToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extractPackgetToolStripMenuItem;
     }
 }
 
