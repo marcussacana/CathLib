@@ -558,6 +558,10 @@ namespace CLGUI {
                 return;
             string Path = ofd.FileName;
             string OutDir = Path + "~\\";
+
+            if (!Directory.Exists(OutDir))
+                Directory.CreateDirectory(OutDir);
+
             using (Stream Content = File.Open(Path, FileMode.Open)) {
                 if (Path.ToLower().EndsWith(".pac")) {
                     foreach (Entry Entry in PAC.Open(Content)) {
