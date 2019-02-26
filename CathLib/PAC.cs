@@ -1,9 +1,6 @@
 ﻿using AdvancedBinary;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using VirtualStream;
 
@@ -27,51 +24,35 @@ namespace CathLib {
                 Entry.Content = new VirtStream(Packget, Reader.BaseStream.Position, Entry.Length);
 
                 Reader.Seek(Entry.Length, SeekOrigin.Current);
-                try {
-                    while (Reader.BaseStream.Position % 0x10 != 0 || Reader.PeekByte() == 0x00 || !ValidFileName(Reader.PeekString(StringStyle.FString, EntryName)))
-                        Reader.BaseStream.Position++;
-                    
-                } catch { }
+
+                while (Reader.BaseStream.Position % 64 != 0)
+                    Reader.BaseStream.Position++;
 
                 Entries.Add(Entry);
             }
 
             return Entries.ToArray();
         }
-        private static bool ValidFileName(string FileName) {
-            if (FileName == string.Empty)
-                return true;
 
-            string[] Parts = FileName.Split('.');
-            if (Parts.Length != 2)
-                return false;
+        public static void Save(Entry[] Entries, Stream Output) {
+            StructWriter Writer = new StructWriter(Output);
 
-            if (FileName.Contains("\\") || FileName.Contains("/"))
-                return false;
+            foreach (Entry Entry in Entries) {
+                var lEntry = Entry;
+                lEntry.Length = (uint)Entry.Content.Length;
+                Writer.WriteStruct(ref lEntry);
+                Entry.Content.CopyTo(Writer.BaseStream);
 
-            if (Parts[1].Length > 3)
-                return false;
+                while (Writer.BaseStream.Position % 64 != 0)
+                    Writer.BaseStream.WriteByte(0x00);
+            }
 
+            //A null Entry = file end
+            var tmp = new Entry() { Name = string.Empty, Length = 0 };
+            Writer.WriteStruct(ref tmp);
 
-
-            List<Range> AllowedRanges = new List<Range>() {
-                Range.BasicLatin,
-                Range.LatinExtendedA,
-                Range.Katakana,
-                Range.Hiragana,
-                Range.KatakanaPhoneticExtensions,
-                Range.CJKUnifiedIdeographs,
-                Range.GeneralPunctuation
-            };
-
-            foreach (char Char in FileName)
-                if (!AllowedRanges.Contains(UnicodeRanges.GetRange(Char)))
-                    return false;
-
-            return true;
+            Writer.Flush();
         }
-
-        static FieldInfo EntryName = (from x in typeof(Entry).GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance) where x.Name == "Name" select x).Single();
     }
 
     public struct Entry {

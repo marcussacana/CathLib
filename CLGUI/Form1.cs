@@ -583,5 +583,40 @@ namespace CLGUI {
             }
             MessageBox.Show("Extracted");
         }
+
+        private void repackPACToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "All PAC Files|*.pac";
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+            string Path = ofd.FileName;
+            string FilesDir = Path + "~\\";
+            string OutPath = System.IO.Path.GetDirectoryName(Path) + "\\" + System.IO.Path.GetFileNameWithoutExtension(Path) + "-new" + System.IO.Path.GetExtension(Path);
+            using (Stream Output = File.Create(OutPath))
+            using (Stream Content = File.Open(Path, FileMode.Open)) {
+                if (Path.ToLower().EndsWith(".pac")) {
+                    var Entries = PAC.Open(Content);
+                    for (int i = 0; i < Entries.Length; i++) {
+                        string FN = FilesDir + GetValidName(Entries[i].Name);
+                        if (File.Exists(FN))
+                            Entries[i].Content = File.Open(FN, FileMode.Open);
+                    }
+
+                    PAC.Save(Entries, Output);
+
+                    foreach (Entry Entry in Entries)
+                        Entry.Content.Close();
+                }
+                if (Path.ToLower().EndsWith(".bf")) {
+                    MessageBox.Show("Not Supported Yet");
+                    return;
+                }
+
+                Content.Close();
+                Output.Close();
+            }
+
+            MessageBox.Show("Repacked");
+        }
     }
 }

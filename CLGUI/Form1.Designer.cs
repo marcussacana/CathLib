@@ -42,6 +42,7 @@
             this.saveToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.generateStringPatchxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractPackgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repackPACToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,9 +78,10 @@
             this.debugToolStripMenuItem,
             this.dDSToolStripMenuItem,
             this.generateStringPatchxmlToolStripMenuItem,
-            this.extractPackgetToolStripMenuItem});
+            this.extractPackgetToolStripMenuItem,
+            this.repackPACToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(185, 202);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(185, 224);
             // 
             // openToolStripMenuItem
             // 
@@ -196,6 +198,13 @@
             this.extractPackgetToolStripMenuItem.Text = "Extract Packget";
             this.extractPackgetToolStripMenuItem.Click += new System.EventHandler(this.extractPackgetToolStripMenuItem_Click);
             // 
+            // repackPACToolStripMenuItem
+            // 
+            this.repackPACToolStripMenuItem.Name = "repackPACToolStripMenuItem";
+            this.repackPACToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.repackPACToolStripMenuItem.Text = "Repack PAC";
+            this.repackPACToolStripMenuItem.Click += new System.EventHandler(this.repackPACToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -232,6 +241,7 @@
         private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recompressToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractPackgetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem repackPACToolStripMenuItem;
     }
 }
 
