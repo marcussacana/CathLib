@@ -181,6 +181,7 @@ namespace CathLib {
 
             return Info;
         }
+        
         static Rectangle SkipX(this Rectangle Rectangle, Rectangle Target) {
             return new Rectangle(Target.X + Target.Width + 1, Target.Y, Rectangle.Width, Rectangle.Height);
         }

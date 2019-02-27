@@ -467,7 +467,7 @@ namespace CLGUI {
                     }
 
                     using (Stream Output = File.Create(Auto ? Path.GetDirectoryName(FileName) + "\\" + Path.GetFileNameWithoutExtension(FileName) + "-new" + Path.GetExtension(FileName) : sfd.FileName)) {
-                        Texture.Export(Output, Frames, recompressToolStripMenuItem.Checked);
+                        Texture.Export(Output, Frames, recompressToolStripMenuItem.Checked, !keepFramePointsToolStripMenuItem.Checked);
                         Output.Close();
                     }
 
@@ -617,6 +617,37 @@ namespace CLGUI {
             }
 
             MessageBox.Show("Repacked");
+        }
+
+        private void dumpDDSToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "All SP2 Files|*.SP2";
+            ofd.Multiselect = true;
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            foreach (string FileName in ofd.FileNames) {
+                string OutDir = FileName + "~\\";
+
+                if (!Directory.Exists(OutDir))
+                    Directory.CreateDirectory(OutDir);
+
+                using (Stream Input = File.Open(FileName, FileMode.Open)) {
+                    SP2 SP2 = new SP2(Input);
+
+                    var TexsData = SP2.GetTextures();
+                    for (int i = 0; i < TexsData.Length; i++) {
+                        DDS DDS = new DDS(TexsData[i]);
+                        Bitmap[] Textures = DDS.Import();
+                        for (int x = 0; x < Textures.Length; x++) {
+                            Textures[x].Save(OutDir + $"{i}-{x}.png", System.Drawing.Imaging.ImageFormat.Png);
+                            Textures[x].Dispose();
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show("Dumped");
         }
     }
 }

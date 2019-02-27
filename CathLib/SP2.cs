@@ -81,7 +81,7 @@ namespace CathLib {
         }
 
 
-        public void Export(Stream Output, Frame[] Frames, bool Recompress = true) {
+        public void Export(Stream Output, Frame[] Frames, bool Recompress = true, bool AllowResize = true) {
             for (int i = 0; i < Textures.Length; i++) {
                 KeyFrame[] TexKFrames = (from x in KeyFrames where x.Width * x.Heigth != 0 && i == x.TextureID select x).ToArray();
                 Bitmap[] TexFrames = (from x in Frames where 
@@ -95,16 +95,18 @@ namespace CathLib {
 
 
                 var Info = TexFrames.CreateSheet();
-                Textures[i].Bitmap = Info.TextureSheet;
+                if (!AllowResize) {
+                        Textures[i].Bitmap = Info.TextureSheet;
 
-                for (int x = 0; x < Info.Textures.Length; x++) {
-                    Frame Current = (from z in Frames where Info.Textures[x].Original == z.Content select z).Single();
+                    for (int x = 0; x < Info.Textures.Length; x++) {
+                        Frame Current = (from z in Frames where Info.Textures[x].Original == z.Content select z).Single();
 
-                    KeyFrames[Current.KeyFrameID].X1 = Info.Textures[x].Rectangle.X;
-                    KeyFrames[Current.KeyFrameID].Y1 = Info.Textures[x].Rectangle.Y;
-                    KeyFrames[Current.KeyFrameID].X2 = Info.Textures[x].Rectangle.Right;
-                    KeyFrames[Current.KeyFrameID].Y2 = Info.Textures[x].Rectangle.Bottom;
+                        KeyFrames[Current.KeyFrameID].X1 = Info.Textures[x].Rectangle.X;
+                        KeyFrames[Current.KeyFrameID].Y1 = Info.Textures[x].Rectangle.Y;
+                        KeyFrames[Current.KeyFrameID].X2 = Info.Textures[x].Rectangle.Right;
+                        KeyFrames[Current.KeyFrameID].Y2 = Info.Textures[x].Rectangle.Bottom;
 
+                    }
                 }
 
                 var Texture = Textures[i].Texture;
@@ -116,7 +118,35 @@ namespace CathLib {
                 if (Format != DXGI_FORMAT.R8G8B8A8_UNORM)
                     Texture = Texture.Convert(DXGI_FORMAT.R8G8B8A8_UNORM, TEX_FILTER_FLAGS.DEFAULT, 1f);
 
-                Texture = Texture.SetBitmap(Info.TextureSheet);
+                Bitmap NewTexture = Info.TextureSheet;
+                if (AllowResize) {
+                    NewTexture = new Bitmap(Textures[i].Metadata.Width, Textures[i].Metadata.Height);
+
+                    using (Graphics g = Graphics.FromImage(NewTexture)) {
+                        for (int x = 0; x < TexFrames.Length; x++) {
+                            Bitmap Current = TexFrames[x];
+                            KeyFrame Frame = TexKFrames[x];
+
+                            if (Current.Width > Frame.Width || Current.Height > Frame.Heigth)
+                                throw new OutOfMemoryException("New Frame are too big...");
+
+                            if (Current.Width < Frame.Width || Current.Height < Frame.Heigth) {
+#if DEBUG
+                                throw new Exception("Small Frame");
+#else
+                                TexKFrames[x].X2 = Frame.X1 + Current.Width;
+                                TexKFrames[x].Y2 = Frame.Y1 + Current.Height;
+#endif
+                            }
+
+                            g.DrawImageUnscaled(Current, new Rectangle(Frame.X1, Frame.Y1, Frame.Width, Frame.Heigth));
+                        }
+
+                        g.Flush();
+                    }
+                }
+
+                Texture = Texture.SetBitmap(NewTexture);
 
                 if (Format != DXGI_FORMAT.R8G8B8A8_UNORM) {
                     if (Textures[i].IsCompressed)
@@ -167,6 +197,13 @@ namespace CathLib {
             return Stream.ToArray();
         }
 
+        public Stream[] GetTextures() {
+            if (Header.Signature != "SPR0")
+                Import();
+
+            return (from x in Textures select x.Texture.SaveToDDSMemory(0, DDS_FLAGS.NONE)).ToArray();
+        }
+        
         static byte[] Sig = new byte[] { 0x00, 0x45, 0x64, 0x69, 0x74, 0x65, 0x64, 0x20, 0x57, 0x69, 0x74, 0x68, 0x20, 0x43, 0x61, 0x74, 0x68, 0x4C, 0x69, 0x62, 0x00 };
 
         KeyFrame GetKeyFrame(Frame Frame) => KeyFrames[Frame.KeyFrameID];

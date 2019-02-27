@@ -43,6 +43,8 @@
             this.generateStringPatchxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractPackgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repackPACToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keepFramePointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dumpDDSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -108,7 +110,8 @@
             // 
             this.sP2ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem1,
-            this.saveToolStripMenuItem1});
+            this.saveToolStripMenuItem1,
+            this.dumpDDSToolStripMenuItem});
             this.sP2ToolStripMenuItem.Name = "sP2ToolStripMenuItem";
             this.sP2ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.sP2ToolStripMenuItem.Text = "SP2";
@@ -123,9 +126,10 @@
             // saveToolStripMenuItem1
             // 
             this.saveToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.recompressToolStripMenuItem});
+            this.recompressToolStripMenuItem,
+            this.keepFramePointsToolStripMenuItem});
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem1.Text = "Save";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
             // 
@@ -205,6 +209,20 @@
             this.repackPACToolStripMenuItem.Text = "Repack PAC";
             this.repackPACToolStripMenuItem.Click += new System.EventHandler(this.repackPACToolStripMenuItem_Click);
             // 
+            // keepFramePointsToolStripMenuItem
+            // 
+            this.keepFramePointsToolStripMenuItem.CheckOnClick = true;
+            this.keepFramePointsToolStripMenuItem.Name = "keepFramePointsToolStripMenuItem";
+            this.keepFramePointsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keepFramePointsToolStripMenuItem.Text = "Keep Frame Points";
+            // 
+            // dumpDDSToolStripMenuItem
+            // 
+            this.dumpDDSToolStripMenuItem.Name = "dumpDDSToolStripMenuItem";
+            this.dumpDDSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dumpDDSToolStripMenuItem.Text = "Dump DDS";
+            this.dumpDDSToolStripMenuItem.Click += new System.EventHandler(this.dumpDDSToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -242,6 +260,8 @@
         private System.Windows.Forms.ToolStripMenuItem recompressToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractPackgetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem repackPACToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keepFramePointsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dumpDDSToolStripMenuItem;
     }
 }
 
