@@ -95,7 +95,7 @@ namespace CathLib {
 
 
                 var Info = TexFrames.CreateSheet();
-                if (!AllowResize) {
+                if (AllowResize) {
                         Textures[i].Bitmap = Info.TextureSheet;
 
                     for (int x = 0; x < Info.Textures.Length; x++) {
@@ -119,7 +119,7 @@ namespace CathLib {
                     Texture = Texture.Convert(DXGI_FORMAT.R8G8B8A8_UNORM, TEX_FILTER_FLAGS.DEFAULT, 1f);
 
                 Bitmap NewTexture = Info.TextureSheet;
-                if (AllowResize) {
+                if (!AllowResize) {
                     NewTexture = new Bitmap(Textures[i].Metadata.Width, Textures[i].Metadata.Height);
 
                     using (Graphics g = Graphics.FromImage(NewTexture)) {
