@@ -404,16 +404,33 @@ namespace CLGUI {
         }
 
         private void createRectanglesToolStripMenuItem_Click(object sender, EventArgs e) {
-#if DEBUG
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Multiselect = true;
+            fd.Filter = "All PNG Files|*.png";
             bool Swich = false;
+            bool RealSizes = false;
 
-            Bitmap[] Array = new Bitmap[new Random().Next(10, 30)];
+            Bitmap[] Array;
+            if (fd.ShowDialog() != DialogResult.OK)
+                Array = new Bitmap[new Random().Next(10, 30)];
+            else {
+                Array = new Bitmap[fd.FileNames.Length];
+
+                for (int i = 0; i < Array.Length; i++)
+                    Array[i] = Image.FromFile(fd.FileNames[i]) as Bitmap;
+
+                RealSizes = true;
+            }
+
             byte[] Rand = new byte[4 * Array.Length];
             new Random().NextBytes(Rand);
             for (int i = 0; i < Array.Length; i++) {
                 int Width = Rand[(i * 4) + 0];
                 int Heigth = Rand[(i * 4) + 2];
-                Array[i] = new Bitmap(Width, Heigth);
+                if (!RealSizes)
+                    Array[i] = new Bitmap(Width, Heigth);
+                else
+                    Array[i] = new Bitmap(Array[i].Width, Array[i].Height);
 
                 using (Graphics g = Graphics.FromImage(Array[i])) {
                     g.DrawRectangle(Swich ? Pens.Black : Pens.DarkBlue, new Rectangle(new Point(0, 0), new Size(Array[i].Size.Width - 1, Array[i].Size.Height - 1)));
@@ -424,7 +441,6 @@ namespace CLGUI {
             var Result = Array.CreateSheet();
             Result.TextureSheet.Save("sheet.png");
             MessageBox.Show("Genareted");
-#endif
         }
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e) {

@@ -232,6 +232,9 @@ namespace CathLib {
 
                 if (Rectangle.IntersectsWith(Rect))
                     return true;
+
+                if (Rectangle.IntersectsWith(new Rectangle(Rect.Location, new Size(Rect.Width + 1, Rect.Height + 1))))
+                    return true;
             }
 
             return false;
