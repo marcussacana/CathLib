@@ -9,10 +9,15 @@ namespace CathLib {
 
         static UnicodeCategory[] Unprintable = new UnicodeCategory[] { UnicodeCategory.Control, UnicodeCategory.OtherNotAssigned, UnicodeCategory.Surrogate };
 
+        public Dictionary<int, string> LabelMap { get; private set; }
+        public Dictionary<int, long> IDMap { get; private set; }
+
         public BMDTL(byte[] Script) : base(Script) { }
 
         public override string[] Import() {
-            string[] Strs = base.Import();
+            LabelMap = new Dictionary<int, string>();
+            IDMap = new Dictionary<int, long>();
+            var Entries = base.Open();
 
             List<char> BlackList = new List<char>(new char[] {
                 (char)0x0821, (char)0x0A3F, (char)0x09E3
@@ -29,24 +34,35 @@ namespace CathLib {
 				Range.CJKSymbolsAndPunctuation
             };
 
-            for (int x = 0; x < Strs.Length; x++) {
-                string Rst = string.Empty;
-                foreach (char c in Strs[x]) {
-                    bool AllowedRange = AllowedRanges.Contains(UnicodeRanges.GetRange(c));
-                    bool NotPrintable = Unprintable.Contains(char.GetUnicodeCategory(c)) | BlackList.Contains(c) | !AllowedRange;
+            List<string> Strings = new List<string>();
+            for (int i = 0; i < Entries.Length; i++) {
 
-                    Rst += NotPrintable ? $"{{0x{((ushort)c).ToString("X4")}}}" : Decode(c.ToString());
+                var Strs = Entries[i].Strings;
+                for (int x = 0; x < Strs.Length; x++) {
+                    LabelMap[Strings.Count + x] = Entries[i].Label;
+                    IDMap[Strings.Count + x] = Entries[i].ID;
+
+                    string Rst = string.Empty;
+                    foreach (char c in Strs[x]) {
+                        bool AllowedRange = AllowedRanges.Contains(UnicodeRanges.GetRange(c));
+                        bool NotPrintable = Unprintable.Contains(char.GetUnicodeCategory(c)) | BlackList.Contains(c) | !AllowedRange;
+
+                        Rst += NotPrintable ? $"{{0x{((ushort)c).ToString("X4")}}}" : Decode(c.ToString());
+                    }
+
+                    if (Rst.EndsWith("\\n"))
+                        Rst = Rst.Substring(0, Rst.Length - 2);
+
+                    Strs[x] = Rst;
                 }
 
-                if (Rst.EndsWith("\\n"))
-                    Rst = Rst.Substring(0, Rst.Length - 2);
-
-                Strs[x] = Rst;
+                Strings.AddRange(Strs);
             }
 
-            return Strs;
+            return Strings.ToArray();
         }
     }
+    
 
     public static class UnicodeRanges {
 

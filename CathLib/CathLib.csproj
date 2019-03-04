@@ -51,14 +51,14 @@
     <Compile Include="DDS.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MailData.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="BMD.cs" />
     <Compile Include="MFTBL.cs" />
     <Compile Include="PAC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remap.cs" />
     <Compile Include="SP2.cs" />
     <Compile Include="StructStream.cs" />
-    <Compile Include="TL.cs" />
+    <Compile Include="BMDTL.cs" />
     <Compile Include="VirtStream.cs" />
     <Compile Include="XML.cs" />
   </ItemGroup>

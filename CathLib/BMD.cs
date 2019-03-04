@@ -7,8 +7,7 @@ using System.Text;
 
 namespace CathLib
 {
-    public class BMD
-    {
+    public class BMD {
         const ushort EndFlag = 0xD821;
         const ushort NxtFlag = 0xD841;
         const ushort BrkFlag = 0x0000;
@@ -23,8 +22,14 @@ namespace CathLib
 
         const uint HeaderLen = 0x1C;
         public virtual string[] Import() {
+            MSGEntry[] Entries = Open();
+
+            return Entries.SelectMany(x => x.Strings).ToArray();
+        }
+
+        public virtual MSGEntry[] Open() {
             if (Script.Length == 0)
-                return new string[0];
+                return new MSGEntry[0];
 
             StructReader Reader = new StructReader(new MemoryStream(Script), true, Encoding.ASCII);
             BMDStruct Info = new BMDStruct();
@@ -43,13 +48,13 @@ namespace CathLib
 
                     MSGEntry Entry = new MSGEntry();
                     Reader.ReadStruct(ref Entry);
+                    Entry.ID = Entries.LongCount();
                     Entry.Strings = new string[Entry.Count];
                     Entries.Add(Entry);
                 }
                 Reader.BaseStream.Position = Pos;
             }
-
-            List<string> Strings = new List<string>();
+            
             for (int i = 0; i < Entries.Count; i++) {
                 for (int x = 0; x < Entries[i].Count; x++) {
                     Reader.BaseStream.Position = (Entries[i].StrOffset[x] + HeaderLen) - 2;
@@ -92,11 +97,9 @@ namespace CathLib
 
                     Entries[i].Strings[x] = Result;
                 }
-
-                Strings.AddRange(Entries[i].Strings);
             }
 
-            return Strings.ToArray();
+            return Entries.ToArray();
         }
     }
     
@@ -132,6 +135,9 @@ namespace CathLib
 
         [Ignore]
         public string[] Strings;
+
+        [Ignore]
+        public long ID;
     }
 
 }

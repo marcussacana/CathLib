@@ -1,4 +1,4 @@
-# CathLib - v0.9
+# CathLib - v1.0
 A Dll Library to help translate the Catherine Classic;  
 Supported Files: BMD, PAC, BF, SP2.
 

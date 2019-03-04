@@ -29,6 +29,8 @@ namespace CathLib {
 
         public byte[] Optimize() {
             var Entries = Document.DocumentElement;
+
+            //Remove Not Translated
             foreach (var Child in Entries.ChildNodes.Cast<XmlNode>()) {
                 string Match = string.Empty;
                 foreach (var Entry in Child.ChildNodes.Cast<XmlNode>()) {
@@ -42,12 +44,13 @@ namespace CathLib {
                 }
             }
 
+            //Escape break lines
             foreach (var Element in Entries.GetElementsByTagName("Match").Cast<XmlNode>())
                 Element.FirstChild.InnerXml = Element.FirstChild.InnerXml.Replace("\n", ":[BREAKLINE]:");
             foreach (var Element in Entries.GetElementsByTagName("Replace").Cast<XmlNode>())
                 Element.FirstChild.InnerXml = Element.FirstChild.InnerXml.Replace("\n", ":[BREAKLINE]:");
             
-
+            //Sort by Length
             var Elements = (from x in Entries.ChildNodes.Cast<XmlNode>() where x.HasChildNodes orderby 
                             (from y in x.ChildNodes.Cast<XmlNode>() where y.Name == "Match" select y).Single().InnerXml.Length 
                             descending select x).ToArray();

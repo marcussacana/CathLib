@@ -34,6 +34,8 @@
             this.openToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.recompressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keepFramePointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dumpDDSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createRectanglesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,8 +45,7 @@
             this.generateStringPatchxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractPackgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repackPACToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.keepFramePointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dumpDDSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keepIDAndLabelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,6 +102,8 @@
             // 
             // optimizeXMLToolStripMenuItem
             // 
+            this.optimizeXMLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.keepIDAndLabelToolStripMenuItem});
             this.optimizeXMLToolStripMenuItem.Name = "optimizeXMLToolStripMenuItem";
             this.optimizeXMLToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.optimizeXMLToolStripMenuItem.Text = "Buid StringPatch.xml";
@@ -119,7 +122,7 @@
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem1.Text = "Open";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem1_Click);
             // 
@@ -139,8 +142,22 @@
             this.recompressToolStripMenuItem.CheckOnClick = true;
             this.recompressToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.recompressToolStripMenuItem.Name = "recompressToolStripMenuItem";
-            this.recompressToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.recompressToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.recompressToolStripMenuItem.Text = "Recompress";
+            // 
+            // keepFramePointsToolStripMenuItem
+            // 
+            this.keepFramePointsToolStripMenuItem.CheckOnClick = true;
+            this.keepFramePointsToolStripMenuItem.Name = "keepFramePointsToolStripMenuItem";
+            this.keepFramePointsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.keepFramePointsToolStripMenuItem.Text = "Keep Frame Points";
+            // 
+            // dumpDDSToolStripMenuItem
+            // 
+            this.dumpDDSToolStripMenuItem.Name = "dumpDDSToolStripMenuItem";
+            this.dumpDDSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dumpDDSToolStripMenuItem.Text = "Dump DDS";
+            this.dumpDDSToolStripMenuItem.Click += new System.EventHandler(this.dumpDDSToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
@@ -154,14 +171,14 @@
             // createRectanglesToolStripMenuItem
             // 
             this.createRectanglesToolStripMenuItem.Name = "createRectanglesToolStripMenuItem";
-            this.createRectanglesToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.createRectanglesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.createRectanglesToolStripMenuItem.Text = "Create Rectangles";
             this.createRectanglesToolStripMenuItem.Click += new System.EventHandler(this.createRectanglesToolStripMenuItem_Click);
             // 
             // processToolStripMenuItem
             // 
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
-            this.processToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.processToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.processToolStripMenuItem.Text = "Process";
             this.processToolStripMenuItem.Click += new System.EventHandler(this.processToolStripMenuItem_Click);
             // 
@@ -209,19 +226,12 @@
             this.repackPACToolStripMenuItem.Text = "Repack PAC";
             this.repackPACToolStripMenuItem.Click += new System.EventHandler(this.repackPACToolStripMenuItem_Click);
             // 
-            // keepFramePointsToolStripMenuItem
+            // keepIDAndLabelToolStripMenuItem
             // 
-            this.keepFramePointsToolStripMenuItem.CheckOnClick = true;
-            this.keepFramePointsToolStripMenuItem.Name = "keepFramePointsToolStripMenuItem";
-            this.keepFramePointsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.keepFramePointsToolStripMenuItem.Text = "Keep Frame Points";
-            // 
-            // dumpDDSToolStripMenuItem
-            // 
-            this.dumpDDSToolStripMenuItem.Name = "dumpDDSToolStripMenuItem";
-            this.dumpDDSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dumpDDSToolStripMenuItem.Text = "Dump DDS";
-            this.dumpDDSToolStripMenuItem.Click += new System.EventHandler(this.dumpDDSToolStripMenuItem_Click);
+            this.keepIDAndLabelToolStripMenuItem.CheckOnClick = true;
+            this.keepIDAndLabelToolStripMenuItem.Name = "keepIDAndLabelToolStripMenuItem";
+            this.keepIDAndLabelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keepIDAndLabelToolStripMenuItem.Text = "Keep ID and Label";
             // 
             // Form1
             // 
@@ -262,6 +272,7 @@
         private System.Windows.Forms.ToolStripMenuItem repackPACToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keepFramePointsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dumpDDSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keepIDAndLabelToolStripMenuItem;
     }
 }
 

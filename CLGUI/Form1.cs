@@ -17,6 +17,7 @@ namespace CLGUI {
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e) {
             try {
                 textBox1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                Text = "ID: " + listBox1.SelectedIndex;
             } catch { }
         }
 
@@ -82,22 +83,28 @@ namespace CLGUI {
             if (!SD.SelectedPath.EndsWith("\\"))
                 SD.SelectedPath += '\\';
 
-            object[] Data = GetStrings(FB.SelectedPath);
+            ProcRst[] Data = GetStrings(FB.SelectedPath);
 
             Text = "Generating XMLs...";
             Application.DoEvents();
 
             for (int i = 0; i < Data.Length; i++) {
-                string FN = (string)((object[])Data[i])[0];
-                string[] Strings = (string[])((object[])Data[i])[1];
+                string FN = Data[i].Name;
+                string[] Strings = Data[i].BMD.Import();
 
                 string Target = $"{SD.SelectedPath}[{i.ToString("X4")}] {Path.GetFileNameWithoutExtension(FN)}.xml";
 
                 int Entries = 0;
+                List<string> Parsed = new List<string>();
                 using (TextWriter Writer = new StreamWriter(File.Create(Target), Encoding.UTF8)) {
                     Writer.WriteLine("<Patches>");
-                    List<string> Parsed = new List<string>();
-                    foreach (string Str in Strings) {
+                    for (int x = 0; x < Strings.Length; x++){
+                        string Str = Strings[x];
+                        string Label = Data[i].BMD.LabelMap[x];
+                        long ID = Data[i].BMD.IDMap[x];
+                        if (keepIDAndLabelToolStripMenuItem.Checked)
+                            Parsed = new List<string>();
+
                         string[] ParseRst = ParseStr(Str);
                         foreach (string Parse in ParseRst) {
                             if (Parsed.Contains(Parse))
@@ -109,7 +116,13 @@ namespace CLGUI {
 
                             Writer.WriteLine("\t<Patch>");
                             Writer.WriteLine("\t\t<!--{0} -->", Str.Replace("--", "ー"));
-                            Writer.WriteLine("\t\t<ID>-1</ID>");
+
+                            if (keepIDAndLabelToolStripMenuItem.Checked) {
+                                Writer.WriteLine("\t\t<ID>{0}</ID>", ID);
+                                Writer.WriteLine("\t\t<Label>{0}</Label>", Label);
+                            } else
+                                Writer.WriteLine("\t\t<ID>-1</ID>");
+
                             Writer.WriteLine("\t\t<Match>");
                             Writer.WriteLine("\t\t\t<String>{0}</String>", Parse);
                             Writer.WriteLine("\t\t</Match>");
@@ -260,13 +273,13 @@ namespace CLGUI {
 
         private string EscapeXML(string Str) => Str.Replace("&", "&amp;").Replace("\n", "&#xA;").Replace("\r", "&#xD;").Replace("<", "&lt;").Replace(">", "&gt;");
 
-        private object[] GetStrings(string Directory) {
+        private ProcRst[] GetStrings(string Directory) {
 
             Text = "Enumerating Files...";
             Application.DoEvents();
             string[] Files = GetFiles(Directory);
 
-            List<object> Strings = new List<object>();
+            List<ProcRst> Strings = new List<ProcRst>();
             for (long i = 0; i < Files.LongLength; i++) {
                 Text = $"Reading Files... {i}/{Files.LongLength} ({(int)((double)i / Files.LongLength * 100)}%)";
                 Application.DoEvents();
@@ -274,35 +287,45 @@ namespace CLGUI {
                 if (FN.StartsWith("i_") || FN.StartsWith("g_") || FN.StartsWith("s_") || FN.StartsWith("f_"))
                     continue;
 
-                Strings.Add(new object[] { FN, Process(Files[i], File.Open(Files[i], FileMode.Open)) });
+                Strings.AddRange(Process(Files[i], File.Open(Files[i], FileMode.Open)));
             }
 
             return Strings.ToArray();
         }
 
-        private string[] Process(string File, Stream Content) {
-            if (File.ToLower().EndsWith(".bmd"))
-                using (MemoryStream Buffer = new MemoryStream()) {
+        private ProcRst[] Process(string File, Stream Content) {
+            if (File.ToLower().EndsWith(".bmd")) {
+                MemoryStream Buffer = new MemoryStream();
                     Content.CopyTo(Buffer);
-                    BMDTL Script = new BMDTL(Buffer.ToArray());
-                    return Script.Import();
+                return new ProcRst[] {
+                        new ProcRst() {
+                            Name = File,
+                            BMD =  new BMDTL(Buffer.ToArray())
+                        }
+                    };
                 }
+            
             if (File.ToLower().EndsWith(".pac")) {
-                List<string> Strings = new List<string>();
+                List<ProcRst> Strings = new List<ProcRst>();
                 foreach (Entry Entry in PAC.Open(Content))
                     Strings.AddRange(Process(Entry.Name, Entry.Content));
 
                 return Strings.ToArray();
             }
             if (File.ToLower().EndsWith(".bf")) {
-                List<string> Strings = new List<string>();
+                List<ProcRst> Strings = new List<ProcRst>();
                 foreach (Entry Entry in BF.Open(Content))
                     Strings.AddRange(Process(Entry.Name, Entry.Content));
 
                 return Strings.ToArray();
             }
 
-            return new string[0];
+            return new ProcRst[0];
+        }
+
+        struct ProcRst {
+            public string Name;
+            public BMDTL BMD;
         }
 
         private string[] GetFiles(string Directory, string Filter = "*.bmd;*.pac;*.bf") {
@@ -561,7 +584,7 @@ namespace CLGUI {
                 return;
 
             using (Stream File = System.IO.File.Open(ofd.FileName, FileMode.Open)) {
-                string[] Strs = Process(ofd.FileName, File);
+                string[] Strs = Process(ofd.FileName, File).Single().BMD.Import();
                 listBox1.Items.Clear();
                 listBox1.Items.AddRange(Strs);
             }
