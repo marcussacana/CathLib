@@ -564,12 +564,15 @@ namespace CLGUI {
                 for (int i = 0; i < Texs.Length; i++) {
                     string PNG = Texs.Length == 1 ? PNGA : string.Format(PNGB, i);
 
-                    using (var Img = new Bitmap(PNG))
-                        Texs[i] = Img;
-
+                    Texs[i] = new Bitmap(PNG);
                 }
 
                 Texture = Reader.Export(Texs);
+
+                foreach (var Item in Texs)
+                {
+                    Item.Dispose();
+                }
 
                 File.WriteAllBytes(DDS, Texture);
             }
